@@ -1,19 +1,19 @@
 #!/bin/sh
 # 检查环境变量
-if [ -z "$WEBDAV_URL" ] || [ -z "$WEBDAV_USERNAME" ] || [ -z "$WEBDAV_PASSWORD" ]; then
-    echo  "缺少 WEBDAV_URL、WEBDAV_USERNAME 或 WEBDAV_PASSWORD，启动时将不包含备份功能"
+if [ -z "$OK_URL" ] || [ -z "$OK_USERNAME" ] || [ -z "$OK_PASSWORD" ]; then
+    echo  "缺少 OK_URL、OK_USERNAME 或 OK_PASSWORD，启动时将不包含备份功能"
     exit 0
 fi
 
 # 设置备份路径
-WEBDAV_BACKUP_PATH=${WEBDAV_BACKUP_PATH:-""}
-FULL_WEBDAV_URL="${WEBDAV_URL}"
+OK_BACKUP_PATH=${OK_BACKUP_PATH:-""}
+FULL_OK_URL="${OK_URL}"
 
-if [ -n "$WEBDAV_BACKUP_PATH" ]; then
-    FULL_WEBDAV_URL="${WEBDAV_URL}/${WEBDAV_BACKUP_PATH}"
+if [ -n "$OK_BACKUP_PATH" ]; then
+    FULL_OK_URL="${OK_URL}/${OK_BACKUP_PATH}"
 fi
 
-echo "FULL_WEBDAV_URL:${FULL_WEBDAV_URL}"
+echo "FULL_OK_URL:${FULL_OK_URL}"
 
 # 下载最新备份并恢复
 restore_backup() {
@@ -27,9 +27,9 @@ import shutil
 from webdav3.client import Client
 
 options = {
-    'webdav_hostname': '$FULL_WEBDAV_URL',
-    'webdav_login': '$WEBDAV_USERNAME',
-    'webdav_password': '$WEBDAV_PASSWORD'
+    'OK_hostname': '$FULL_OK_URL',
+    'OK_login': '$OK_USERNAME',
+    'OK_password': '$OK_PASSWORD'
 }
 client = Client(options)
 backups = [file for file in client.list() if file.endswith('.tar.gz') and file.startswith('qinglong_backup_')]
@@ -38,7 +38,7 @@ if not backups:
     sys.exit()
 latest_backup = sorted(backups)[-1]
 print(f'最新备份文件：{latest_backup}')
-with requests.get(f'$FULL_WEBDAV_URL/{latest_backup}', auth=('$WEBDAV_USERNAME', '$WEBDAV_PASSWORD'), stream=True) as r:
+with requests.get(f'$FULL_OK_URL/{latest_backup}', auth=('$OK_USERNAME', '$OK_PASSWORD'), stream=True) as r:
     if r.status_code == 200:
         with open(f'/ql/{latest_backup}', 'wb') as f:
             for chunk in r.iter_content(chunk_size=8192):
@@ -75,7 +75,7 @@ sync_data() {
             tar -czf "/ql/${backup_file}" data
 
             # 上传新备份到WebDAV
-            curl -u "$WEBDAV_USERNAME:$WEBDAV_PASSWORD" -T "/ql/${backup_file}" "$FULL_WEBDAV_URL/${backup_file}"
+            curl -u "$OK_USERNAME:$OK_PASSWORD" -T "/ql/${backup_file}" "$FULL_OK_URL/${backup_file}"
             if [ $? -eq 0 ]; then
                 echo "Successfully uploaded ${backup_file} to WebDAV"
             else
@@ -87,9 +87,9 @@ sync_data() {
 import sys
 from webdav3.client import Client
 options = {
-    'webdav_hostname': '$FULL_WEBDAV_URL',
-    'webdav_login': '$WEBDAV_USERNAME',
-    'webdav_password': '$WEBDAV_PASSWORD'
+    'OK_hostname': '$FULL_OK_URL',
+    'OK_login': '$OK_USERNAME',
+    'OK_password': '$OK_PASSWORD'
 }
 client = Client(options)
 backups = [file for file in client.list() if file.endswith('.tar.gz') and file.startswith('qinglong_backup_')]
