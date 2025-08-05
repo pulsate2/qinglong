@@ -4,5 +4,7 @@ run pip install playwright
 run apt-get install sudo
 run sudo playwright install-deps
 copy nginx.conf /etc/nginx/conf.d/hug.conf
+copy sync_data.sh sync_data.sh
+chmod 777  sync_data.sh
 USER user
 run playwright install
