@@ -8,3 +8,7 @@ copy sync_data.sh sync_data.sh
 run chmod 777  sync_data.sh
 USER user
 run playwright install
+
+run mkdir /web
+run chmod 777 /web
+copy index.html /web/index.html
