@@ -6,9 +6,11 @@ run sudo playwright install-deps
 copy nginx.conf /etc/nginx/conf.d/hug.conf
 copy sync_data.sh sync_data.sh
 run chmod 777  sync_data.sh
+
+run mkdir /web
+copy index.html /web/index.html
+run chmod 777 /web/index.html
+
 USER user
 run playwright install
 
-run mkdir /web
-run chmod 777 /web
-copy index.html /web/index.html
