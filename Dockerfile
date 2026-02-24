@@ -33,6 +33,6 @@ run chmod 777 /web/index.html
 
 USER user
 run playwright install
-pip install httpx[http2] dotenv httpx redis websocket-client DrissionPage webdavclient3 psycopg2-binary openai curl_cffi playwright_stealth playwright requests feedparser colorama cryptography resend pymysql beautifulsoup4
+run pip install httpx[http2] dotenv httpx redis websocket-client DrissionPage webdavclient3 psycopg2-binary openai curl_cffi playwright_stealth playwright requests feedparser colorama cryptography resend pymysql beautifulsoup4
 
 
