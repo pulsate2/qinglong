@@ -31,8 +31,6 @@ run mkdir /web
 copy index.html /web/index.html
 run chmod 777 /web/index.html
 
-run sed -i "s/listen 5700/listen 8888/g" /etc/nginx/conf.d/front.conf
-
 USER user
 run playwright install
 
