@@ -3,1663 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini Image Generator</title>
+    <title>Apple Intelligence - AI 苹果智能</title>
     <style>
-        * {
+        /* 基础样式复刻苹果极简风 */
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            background-color: #000; /* 深色模式背景 */
+            color: #fff;
+            line-height: 1.5;
+            overflow-x: hidden;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+        /* 顶部导航栏 */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 15px 0;
+            background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
         }
+        nav a {
+            color: #f5f5f7;
+            text-decoration: none;
+            font-size: 14px;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        nav a:hover { opacity: 1; }
 
-        .header {
+        /* 首屏 Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            margin-bottom: 30px;
+            position: relative;
         }
 
-        .header h1 {
-            color: #333;
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        /* 模拟全新 Siri 的炫彩发光背景 */
+        .siri-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(138,43,226,0.6) 0%, rgba(0,212,255,0.4) 40%, rgba(0,0,0,0) 70%);
+            filter: blur(50px);
+            animation: pulse 4s infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.2); opacity: 0.5; }
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, #fff, #a1a1a6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
-        .header p {
-            color: #666;
-            font-size: 1.1em;
+        .hero p {
+            font-size: 24px;
+            color: #a1a1a6;
+            max-width: 700px;
+            margin-bottom: 40px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
+        .btn {
+            background-color: #fff;
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
             font-weight: 600;
-            color: #333;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
             font-size: 16px;
-            transition: all 0.3s ease;
-            background: white;
+            transition: transform 0.2s;
         }
+        .btn:hover { transform: scale(1.05); }
 
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        .button {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .button-small {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 5px;
-        }
-
-        .button-small:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 10px rgba(102, 126, 234, 0.3);
-        }
-
-        .button-clear {
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-        }
-
-        .button-add {
-            background: linear-gradient(135deg, #27ae60, #219653);
-        }
-
-        .button-history {
-            background: linear-gradient(135deg, #9b59b6, #8e44ad);
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .result {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #667eea;
-        }
-
-        .result h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .generated-image {
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            margin: 10px 0;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .generated-image:hover {
-            transform: scale(1.02);
-        }
-
-        .error {
-            background: #fee;
-            border-left-color: #e74c3c;
-            color: #c0392b;
-        }
-
-        .success {
-            background: #f0fff4;
-            border-left-color: #27ae60;
-            color: #27ae60;
-        }
-
-        .warning {
-            background: #fff8e1;
-            border-left-color: #ff9800;
-            color: #f57c00;
-        }
-
-        .config-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-
-        .config-section h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        .upload-area {
-            border: 2px dashed #e1e5e9;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            background: #fafbfc;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .upload-area:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-
-        .upload-area.dragover {
-            border-color: #667eea;
-            background: #f0f4ff;
-            transform: scale(1.02);
-        }
-
-        .upload-text {
-            color: #666;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        .upload-icon {
-            font-size: 48px;
-            color: #ccc;
-            margin-bottom: 10px;
-        }
-
-        .upload-icon::before {
-            content: "📁";
-        }
-
-        .file-input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .uploaded-image {
-            max-width: 200px;
-            max-height: 200px;
-            border-radius: 8px;
-            margin: 10px 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .image-preview {
-            position: relative;
-            display: inline-block;
-            margin: 5px;
-        }
-
-        .remove-image {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        .remove-image:hover {
-            background: #c0392b;
-        }
-
-        .download-info {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #27ae60;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.3s ease;
-        }
-
-        .download-info.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .retry-info {
-            background: #ff9800;
-            border-left-color: #ff9800;
-            color: #f57c00;
-            margin-top: 10px;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .action-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            flex-wrap: wrap;
-        }
-
-        .upload-info {
-            background: #e8f5e8;
-            border-left-color: #27ae60;
-            color: #27ae60;
-            margin-top: 10px;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .clear-info {
-            background: #ffe8e8;
-            border-left-color: #e74c3c;
-            color: #c0392b;
-            margin-top: 10px;
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            padding: 8px 12px;
-            background: #f0f4ff;
-            border-radius: 6px;
-            font-size: 14px;
-            color: #555;
-        }
-
-        .history-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #9b59b6;
-        }
-
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .history-header h3 {
-            color: #333;
-            margin: 0;
-        }
-
-        .history-grid {
+        /* 特性区块 */
+        .features {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
         }
 
-        .history-item {
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-            cursor: pointer;
+        .feature-card {
+            background-color: #111;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: left;
         }
 
-        .history-item:hover {
-            transform: scale(1.05);
+        .feature-card h3 {
+            font-size: 28px;
+            margin-top: 0;
+            color: #fff;
         }
 
-        .history-image {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            display: block;
+        .feature-card p {
+            font-size: 18px;
+            color: #a1a1a6;
         }
 
-        .history-prompt {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 8px;
-            font-size: 12px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .history-actions {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .history-action-btn {
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            border-radius: 4px;
-            width: 25px;
-            height: 25px;
-            cursor: pointer;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .history-action-btn:hover {
-            background: white;
-        }
-
-        .empty-history {
+        /* 隐私区块 */
+        .privacy {
             text-align: center;
-            color: #666;
-            padding: 20px;
-            font-style: italic;
+            padding: 120px 20px;
+            background-color: #0a0a0a;
         }
-
-        .history-loading {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-        }
-
-        /* 历史提示词样式 */
-        .prompt-history-section {
+        .privacy h2 {
+            font-size: 48px;
             margin-bottom: 20px;
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 4px solid #3498db;
+        }
+        .privacy p {
+            font-size: 20px;
+            color: #a1a1a6;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .prompt-history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .prompt-history-header h3 {
-            color: #333;
-            margin: 0;
-            font-size: 1.1em;
-        }
-
-        .prompt-history-content {
-            display: none;
-        }
-
-        .prompt-history-content.show {
-            display: block;
-        }
-
-        .prompt-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .prompt-item {
-            padding: 8px 12px;
-            margin-bottom: 5px;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid #e1e5e9;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .prompt-item:hover {
-            background: #f0f4ff;
-            border-color: #667eea;
-        }
-
-        .prompt-text {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            margin-right: 10px;
-        }
-
-        .prompt-remove {
-            background: none;
-            border: none;
-            color: #e74c3c;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 2px 5px;
-            border-radius: 4px;
-        }
-
-        .prompt-remove:hover {
-            background: #ffe8e8;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .header h1 {
-                font-size: 2em;
-            }
-
-            .download-info {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                font-size: 12px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .button-small {
-                width: 100%;
-                margin: 5px 0;
-            }
-
-            .history-grid {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-            
-            .history-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .history-header h3 {
-                text-align: center;
-            }
-
-            .prompt-item {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .prompt-text {
-                margin-right: 0;
-                margin-bottom: 5px;
-                width: 100%;
-            }
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #6e6e73;
+            font-size: 12px;
+            border-top: 1px solid #333;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Gemini Image Generator</h1>
-            <p>使用Gemini生成精美图像</p>
+
+    <nav>
+        <a href="#">Apple Intelligence</a>
+        <a href="#features">功能特性</a>
+        <a href="#siri">全新 Siri</a>
+        <a href="#privacy">隐私保护</a>
+    </nav>
+
+    <section class="hero">
+        <div class="siri-glow"></div>
+        <h1>遇见 Apple Intelligence</h1>
+        <p>AI，此刻懂你。强大的生成式模型直接融入你的设备，帮你书写、表达、搞定日常。它极具智慧，更极其注重隐私。</p>
+        <a href="#" class="btn">了解更多</a>
+    </section>
+
+    <section id="features" class="features">
+        <div class="feature-card">
+            <h3>妙笔生花，<br>随手就来。</h3>
+            <p>全系统级别的书写工具。无论是在邮件、备忘录还是第三方应用中，它都能帮你重写、校对或总结文本，语气随意切换。</p>
         </div>
-
-        <div class="config-section">
-            <h3>API配置</h3>
-            <div class="form-group">
-                <label for="apiKey">Gemini API Key:</label>
-                <input type="password" id="apiKey" placeholder="输入您的Gemini API Key">
-            </div>
-            <div class="form-group">
-                <label for="baseUrl">Base URL (可选):</label>
-                <input type="url" id="baseUrl" value="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent" placeholder="https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent">
-            </div>
+        <div class="feature-card">
+            <h3>全新 Siri，<br>超级懂你。</h3>
+            <p>屏幕边缘亮起炫目流光。它可以结合屏幕上下文理解你的意图，支持连续对话。甚至你说话磕巴，它也能懂。</p>
         </div>
-
-        <div class="form-group">
-            <label for="imageUpload">上传参考图片 (可选):</label>
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-icon"></div>
-                <div class="upload-text">点击或拖拽图片到这里</div>
-                <input type="file" class="file-input" id="imageUpload" accept="image/*" multiple>
-            </div>
-            <div id="imagePreview"></div>
-            
-            <!-- 清空上传图片按钮 -->
-            <div class="action-buttons" id="uploadActionButtons" style="display: none;">
-                <button type="button" class="button-small button-clear" onclick="clearUploadedImages()">
-                    🗑️ 清空上传图片
-                </button>
-                <div class="stats-bar">
-                    <span>已上传: <strong id="uploadCount">0</strong> 张图片</span>
-                    <span>总大小: <strong id="uploadSize">0 KB</strong></span>
-                </div>
-            </div>
+        <div class="feature-card">
+            <h3>创想，<br>跃然屏上。</h3>
+            <p>通过“图像游乐场”快速生成趣味插图，或者用一段描述生成专属于你的表情符号（Genmoji），沟通从此与众不同。</p>
         </div>
+    </section>
 
-        <!-- 历史提示词部分 -->
-        <div class="prompt-history-section">
-            <div class="prompt-history-header">
-                <h3>历史提示词</h3>
-                <button type="button" class="button-small button-history" onclick="togglePromptHistory()">
-                    📋 显示/隐藏历史提示词
-                </button>
-            </div>
-            <div class="prompt-history-content" id="promptHistoryContent">
-                <ul class="prompt-list" id="promptList">
-                    <!-- 历史提示词将在这里动态生成 -->
-                </ul>
-                <div class="action-buttons">
-                    <button type="button" class="button-small button-clear" onclick="clearPromptHistory()">
-                        🗑️ 清空历史提示词
-                    </button>
-                    <div class="stats-bar">
-                        <span>已保存: <strong id="promptCount">0</strong> 条提示词</span>
-                        <span>最大保存: <strong>10</strong> 条</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <section id="privacy" class="privacy">
+        <h2>隐私保护，从芯片开始。</h2>
+        <p>行业首创的“私密云计算”。你的数据主要在设备端侧处理；遇到需要云端算力的复杂任务时，数据也绝不会被存储，连 Apple 官方也无法访问。你的隐私，百分百掌握在你手中。</p>
+    </section>
 
-        <div class="form-group">
-            <label for="prompt">描述您想要生成的图像:</label>
-            <textarea id="prompt" placeholder="例如：一只可爱的橘色小猫坐在樱花树下，动漫风格，高质量，详细..."></textarea>
-        </div>
+    <footer>
+        <p>支持设备：iPhone 15 Pro / iPhone 16 系列及搭载 M1 或后续芯片的 iPad 与 Mac。</p>
+        <p>&copy; 2024 Apple Inc. 保留所有权利 (示例页面)</p>
+    </footer>
 
-        <button type="button" class="button" onclick="generateImage()">
-            生成图像
-        </button>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p id="loadingText">正在生成图像，请稍候...</p>
-        </div>
-
-        <div id="result"></div>
-
-        <!-- 历史记录部分 -->
-        <div class="history-section" id="historySection">
-            <div class="history-header">
-                <h3>历史记录</h3>
-                <button type="button" class="button-small button-history" onclick="toggleHistory()">
-                    📋 显示/隐藏历史
-                </button>
-            </div>
-            <div class="history-content" id="historyContent" style="display: none;">
-                <div id="historyGrid" class="history-grid">
-                    <div class="history-loading">正在加载历史记录...</div>
-                </div>
-                <div class="action-buttons">
-                    <button type="button" class="button-small button-clear" onclick="clearHistory()">
-                        🗑️ 清空历史记录
-                    </button>
-                    <div class="stats-bar">
-                        <span>已保存: <strong id="historyCount">0</strong> 张图片</span>
-                        <span>最大保存: <strong>50</strong> 张</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 下载提示信息 -->
-    <div class="download-info" id="downloadInfo">
-        图像下载成功！
-    </div>
-
-    <script>
-        let generatedImages = [];
-        let uploadedImages = [];
-        let currentRetryCount = 0;
-        const MAX_RETRY_COUNT = 3;
-        const MAX_HISTORY_ITEMS = 50;
-        const MAX_PROMPT_HISTORY = 10;
-
-        // LocalStorage键名
-        const STORAGE_KEYS = {
-            API_KEY: 'gemini_api_key',
-            BASE_URL: 'gemini_base_url',
-            PROMPT_HISTORY: 'prompt_history'
-        };
-
-        // IndexedDB数据库
-        let db = null;
-        const DB_NAME = 'GeminiImageGenerator';
-        const DB_VERSION = 1;
-        const STORE_NAME = 'history';
-
-        // 初始化IndexedDB
-        function initIndexedDB() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
-                
-                request.onerror = (event) => {
-                    console.error('IndexedDB打开失败:', event.target.error);
-                    reject(event.target.error);
-                };
-                
-                request.onsuccess = (event) => {
-                    db = event.target.result;
-                    console.log('IndexedDB初始化成功');
-                    resolve(db);
-                };
-                
-                request.onupgradeneeded = (event) => {
-                    const db = event.target.result;
-                    
-                    // 删除旧的存储（如果存在）
-                    if (db.objectStoreNames.contains(STORE_NAME)) {
-                        db.deleteObjectStore(STORE_NAME);
-                    }
-                    
-                    // 创建新的存储
-                    const store = db.createObjectStore(STORE_NAME, {
-                        keyPath: 'id',
-                        autoIncrement: true
-                    });
-                    
-                    // 创建索引
-                    store.createIndex('timestamp', 'timestamp', { unique: false });
-                    store.createIndex('prompt', 'prompt', { unique: false });
-                    
-                    console.log('IndexedDB存储创建成功');
-                };
-            });
-        }
-
-        // 保存提示词到历史记录
-        function savePromptToHistory(prompt) {
-            if (!prompt || prompt.trim() === '') {
-                return;
-            }
-
-            let promptHistory = getPromptHistory();
-            
-            // 检查是否已存在相同的提示词
-            const existingIndex = promptHistory.findIndex(item => item === prompt);
-            
-            if (existingIndex !== -1) {
-                // 如果已存在，将其移动到最前面
-                promptHistory.splice(existingIndex, 1);
-                promptHistory.unshift(prompt);
-            } else {
-                // 如果不存在，添加到最前面
-                promptHistory.unshift(prompt);
-                
-                // 如果超过最大数量，移除最旧的一条
-                if (promptHistory.length > MAX_PROMPT_HISTORY) {
-                    promptHistory.pop();
-                }
-            }
-            
-            // 保存到localStorage
-            localStorage.setItem(STORAGE_KEYS.PROMPT_HISTORY, JSON.stringify(promptHistory));
-            
-            // 更新显示
-            updatePromptHistoryDisplay();
-        }
-
-        // 获取历史提示词
-        function getPromptHistory() {
-            try {
-                const saved = localStorage.getItem(STORAGE_KEYS.PROMPT_HISTORY);
-                return saved ? JSON.parse(saved) : [];
-            } catch (e) {
-                console.error('获取历史提示词失败:', e);
-                return [];
-            }
-        }
-
-        // 清空历史提示词
-        function clearPromptHistory() {
-            if (confirm('确定要清空所有历史提示词吗？此操作无法撤销。')) {
-                localStorage.removeItem(STORAGE_KEYS.PROMPT_HISTORY);
-                updatePromptHistoryDisplay();
-                showResult('历史提示词已清空', 'success');
-            }
-        }
-
-        // 更新历史提示词显示
-        function updatePromptHistoryDisplay() {
-            const promptList = document.getElementById('promptList');
-            const promptCount = document.getElementById('promptCount');
-            const promptHistory = getPromptHistory();
-            
-            // 更新计数
-            if (promptCount) {
-                promptCount.textContent = promptHistory.length;
-            }
-            
-            // 清空现有内容
-            promptList.innerHTML = '';
-            
-            // 如果没有历史提示词
-            if (promptHistory.length === 0) {
-                promptList.innerHTML = `
-                    <li style="padding: 15px; text-align: center; color: #666; font-style: italic;">
-                        暂无历史提示词，生成图像后将显示在这里
-                    </li>
-                `;
-                return;
-            }
-            
-            // 添加历史提示词项
-            promptHistory.forEach((prompt, index) => {
-                const listItem = document.createElement('li');
-                listItem.className = 'prompt-item';
-                listItem.innerHTML = `
-                    <div class="prompt-text" title="${prompt}">${prompt}</div>
-                    <button type="button" class="prompt-remove" onclick="removePromptFromHistory(${index}); event.stopPropagation();">×</button>
-                `;
-                
-                // 点击提示词项时填充到输入框
-                listItem.addEventListener('click', () => {
-                    document.getElementById('prompt').value = prompt;
-                });
-                
-                promptList.appendChild(listItem);
-            });
-        }
-
-        // 从历史记录中移除特定提示词
-        function removePromptFromHistory(index) {
-            let promptHistory = getPromptHistory();
-            if (index >= 0 && index < promptHistory.length) {
-                promptHistory.splice(index, 1);
-                localStorage.setItem(STORAGE_KEYS.PROMPT_HISTORY, JSON.stringify(promptHistory));
-                updatePromptHistoryDisplay();
-            }
-        }
-
-        // 切换历史提示词显示/隐藏
-        function togglePromptHistory() {
-            const promptHistoryContent = document.getElementById('promptHistoryContent');
-            if (promptHistoryContent.classList.contains('show')) {
-                promptHistoryContent.classList.remove('show');
-            } else {
-                promptHistoryContent.classList.add('show');
-                updatePromptHistoryDisplay();
-            }
-        }
-
-        // 保存图像到历史记录
-        async function saveToHistory(imageData, prompt) {
-            if (!db) {
-                console.error('数据库未初始化');
-                return;
-            }
-            
-            try {
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                
-                const historyItem = {
-                    timestamp: new Date().toISOString(),
-                    imageData: imageData,
-                    prompt: prompt
-                };
-                
-                // 添加新记录
-                const request = store.add(historyItem);
-                
-                request.onsuccess = async () => {
-                    console.log('图像已保存到历史记录');
-                    
-                    // 检查是否超出限制
-                    const count = await getHistoryCount();
-                    if (count > MAX_HISTORY_ITEMS) {
-                        // 删除最旧的记录
-                        await removeOldestHistoryItem();
-                    }
-                    
-                    // 更新显示
-                    await updateHistoryDisplay();
-                };
-                
-                request.onerror = (event) => {
-                    console.error('保存到历史记录失败:', event.target.error);
-                };
-                
-            } catch (error) {
-                console.error('保存到历史记录出错:', error);
-            }
-        }
-
-        // 获取历史记录数量
-        function getHistoryCount() {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    resolve(0);
-                    return;
-                }
-                
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const request = store.count();
-                
-                request.onsuccess = () => {
-                    resolve(request.result);
-                };
-                
-                request.onerror = (event) => {
-                    console.error('获取历史记录数量失败:', event.target.error);
-                    resolve(0);
-                };
-            });
-        }
-
-        // 删除最旧的历史记录项
-        function removeOldestHistoryItem() {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    resolve();
-                    return;
-                }
-                
-                const transaction = db.transaction([STORE_NAME], 'readwrite');
-                const store = transaction.objectStore(STORE_NAME);
-                const index = store.index('timestamp');
-                
-                // 获取最旧的记录
-                const request = index.openCursor();
-                let oldestId = null;
-                
-                request.onsuccess = (event) => {
-                    const cursor = event.target.result;
-                    if (cursor) {
-                        oldestId = cursor.value.id;
-                        cursor.continue();
-                    } else if (oldestId !== null) {
-                        // 删除最旧的记录
-                        store.delete(oldestId).onsuccess = () => {
-                            console.log('已删除最旧的历史记录');
-                            resolve();
-                        };
-                    } else {
-                        resolve();
-                    }
-                };
-                
-                request.onerror = (event) => {
-                    console.error('删除最旧记录失败:', event.target.error);
-                    resolve();
-                };
-            });
-        }
-
-        // 获取所有历史记录
-        function getAllHistory() {
-            return new Promise((resolve, reject) => {
-                if (!db) {
-                    resolve([]);
-                    return;
-                }
-                
-                const transaction = db.transaction([STORE_NAME], 'readonly');
-                const store = transaction.objectStore(STORE_NAME);
-                const index = store.index('timestamp');
-                
-                // 按时间戳降序排列（最新的在前）
-                const request = index.openCursor(null, 'prev');
-                const history = [];
-                
-                request.onsuccess = (event) => {
-                    const cursor = event.target.result;
-                    if (cursor) {
-                        history.push(cursor.value);
-                        cursor.continue();
-                    } else {
-                        resolve(history);
-                    }
-                };
-                
-                request.onerror = (event) => {
-                    console.error('获取历史记录失败:', event.target.error);
-                    resolve([]);
-                };
-            });
-        }
-
-        // 清空历史记录
-        async function clearHistory() {
-            if (confirm('确定要清空所有历史记录吗？此操作无法撤销。')) {
-                if (!db) {
-                    showResult('数据库未初始化', 'error');
-                    return;
-                }
-                
-                try {
-                    const transaction = db.transaction([STORE_NAME], 'readwrite');
-                    const store = transaction.objectStore(STORE_NAME);
-                    const request = store.clear();
-                    
-                    request.onsuccess = () => {
-                        console.log('历史记录已清空');
-                        updateHistoryDisplay();
-                        showResult('历史记录已清空', 'success');
-                    };
-                    
-                    request.onerror = (event) => {
-                        console.error('清空历史记录失败:', event.target.error);
-                        showResult('清空历史记录失败: ' + event.target.error, 'error');
-                    };
-                    
-                } catch (error) {
-                    console.error('清空历史记录出错:', error);
-                    showResult('清空历史记录出错: ' + error.message, 'error');
-                }
-            }
-        }
-
-        // 保存配置到localStorage
-        function saveConfig() {
-            const apiKey = document.getElementById('apiKey').value.trim();
-            const baseUrl = document.getElementById('baseUrl').value.trim();
-            
-            if (apiKey) {
-                localStorage.setItem(STORAGE_KEYS.API_KEY, apiKey);
-            }
-            if (baseUrl) {
-                localStorage.setItem(STORAGE_KEYS.BASE_URL, baseUrl);
-            }
-        }
-
-        // 从localStorage加载配置
-        function loadConfig() {
-            const savedApiKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
-            const savedBaseUrl = localStorage.getItem(STORAGE_KEYS.BASE_URL);
-            
-            if (savedApiKey) {
-                document.getElementById('apiKey').value = savedApiKey;
-            }
-            if (savedBaseUrl) {
-                document.getElementById('baseUrl').value = savedBaseUrl;
-            } else {
-                // 设置默认值
-                document.getElementById('baseUrl').value = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent';
-            }
-            
-            // 加载历史提示词
-            updatePromptHistoryDisplay();
-        }
-
-        // 添加输入事件监听器以实时保存
-        function addConfigListeners() {
-            const apiKeyInput = document.getElementById('apiKey');
-            const baseUrlInput = document.getElementById('baseUrl');
-
-            apiKeyInput.addEventListener('input', saveConfig);
-            apiKeyInput.addEventListener('blur', saveConfig);
-            baseUrlInput.addEventListener('input', saveConfig);
-            baseUrlInput.addEventListener('blur', saveConfig);
-        }
-
-        // 计算上传图片总大小
-        function calculateTotalSize() {
-            let totalSize = 0;
-            uploadedImages.forEach(image => {
-                totalSize += image.size || 0;
-            });
-            return totalSize;
-        }
-
-        // 格式化文件大小
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-        }
-
-        // 更新上传图片计数和大小
-        function updateUploadStats() {
-            const countElement = document.getElementById('uploadCount');
-            const sizeElement = document.getElementById('uploadSize');
-            const actionButtons = document.getElementById('uploadActionButtons');
-            
-            if (countElement) {
-                countElement.textContent = uploadedImages.length;
-            }
-            
-            if (sizeElement) {
-                const totalSize = calculateTotalSize();
-                sizeElement.textContent = formatFileSize(totalSize);
-            }
-            
-            if (actionButtons) {
-                actionButtons.style.display = uploadedImages.length > 0 ? 'flex' : 'none';
-            }
-        }
-
-        // 图片上传相关功能
-        function initImageUpload() {
-            const uploadArea = document.getElementById('uploadArea');
-            const fileInput = document.getElementById('imageUpload');
-
-           
-            // 文件选择
-            fileInput.addEventListener('change', handleFileSelect);
-
-            // 拖拽功能
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                handleFiles(files);
-            });
-        }
-
-        function handleFileSelect(e) {
-            const files = e.target.files;
-            handleFiles(files);
-            // 重置文件输入框，允许重复选择相同文件
-            e.target.value = '';
-        }
-
-        function handleFiles(files) {
-            Array.from(files).forEach(file => {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const imageData = e.target.result;
-                        uploadedImages.push({
-                            name: file.name,
-                            data: imageData,
-                            size: file.size
-                        });
-                        displayUploadedImages();
-                        updateUploadStats();
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    showResult(`文件 ${file.name} 不是有效的图片格式`, 'error');
-                }
-            });
-        }
-
-        function displayUploadedImages() {
-            const preview = document.getElementById('imagePreview');
-            preview.innerHTML = '';
-            
-            uploadedImages.forEach((image, index) => {
-                const imageContainer = document.createElement('div');
-                imageContainer.className = 'image-preview';
-                imageContainer.innerHTML = `
-                    <img src="${image.data}" alt="${image.name}" class="uploaded-image">
-                    <button type="button" class="remove-image" onclick="removeUploadedImage(${index})">×</button>
-                `;
-                preview.appendChild(imageContainer);
-            });
-        }
-
-        function removeUploadedImage(index) {
-            uploadedImages.splice(index, 1);
-            displayUploadedImages();
-            updateUploadStats();
-        }
-
-        // 清空所有上传的图片（无需确认）
-        function clearUploadedImages() {
-            if (uploadedImages.length > 0) {
-                uploadedImages = [];
-                displayUploadedImages();
-                updateUploadStats();
-                
-                // 显示成功消息
-                showResult('已清空所有上传图片', 'success');
-            } else {
-                showResult('没有上传的图片可清空', 'warning');
-            }
-        }
-
-        // 将生成的图片添加到上传参考图片中并清空原有图片
-        function addGeneratedToUpload(imageData, prompt) {
-            // 清空原有上传图片
-            uploadedImages = [];
-            
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const filename = `generated-${timestamp}.png`;
-            
-            // 计算base64数据的大小（近似值）
-            const base64Size = Math.floor((imageData.length * 3) / 4);
-            
-            uploadedImages.push({
-                name: filename,
-                data: imageData,
-                prompt: prompt,
-                size: base64Size,
-                isGenerated: true
-            });
-            
-            displayUploadedImages();
-            updateUploadStats();
-            
-            // 显示成功消息
-            const resultDiv = document.getElementById('result');
-            const successMsg = document.createElement('div');
-            successMsg.className = 'upload-info';
-            successMsg.innerHTML = '✅ 已将生成的图像添加到参考图片中，并清空原有图片';
-            resultDiv.querySelector('.result').appendChild(successMsg);
-            
-            // 3秒后自动消失
-            setTimeout(() => {
-                if (successMsg.parentNode) {
-                    successMsg.parentNode.removeChild(successMsg);
-                }
-            }, 3000);
-        }
-
-        // 更新历史记录显示
-        async function updateHistoryDisplay() {
-            const historyGrid = document.getElementById('historyGrid');
-            const historyCount = document.getElementById('historyCount');
-            
-            // 显示加载中
-            historyGrid.innerHTML = '<div class="history-loading">正在加载历史记录...</div>';
-            
-            try {
-                const history = await getAllHistory();
-                
-                // 更新计数
-                if (historyCount) {
-                    historyCount.textContent = history.length;
-                }
-                
-                // 清空现有内容
-                historyGrid.innerHTML = '';
-                
-                // 如果没有历史记录
-                if (history.length === 0) {
-                    historyGrid.innerHTML = `
-                        <div class="empty-history">
-                            暂无历史记录，生成图像后将显示在这里
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // 添加历史记录项
-                history.forEach(item => {
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'history-item';
-                    historyItem.innerHTML = `
-                        <img src="${item.imageData}" alt="历史图像" class="history-image">
-                        <div class="history-prompt" title="${item.prompt}">${item.prompt}</div>
-                        <div class="history-actions">
-                            <button type="button" class="history-action-btn" onclick="useHistoryImage('${item.imageData.replace(/'/g, "\\'")}', '${item.prompt.replace(/'/g, "\\'")}')" title="使用此图像">📝</button>
-                            <button type="button" class="history-action-btn" onclick="downloadHistoryImage('${item.imageData.replace(/'/g, "\\'")}', 'history-${item.id}.png')" title="下载">💾</button>
-                        </div>
-                    `;
-                    historyGrid.appendChild(historyItem);
-                });
-                
-            } catch (error) {
-                console.error('更新历史记录显示失败:', error);
-                historyGrid.innerHTML = `
-                    <div class="empty-history">
-                        加载历史记录失败
-                    </div>
-                `;
-            }
-        }
-
-        // 使用历史记录中的图像
-        function useHistoryImage(imageData, prompt) {
-            // 设置提示词
-            document.getElementById('prompt').value = prompt;
-            
-            // 清空原有上传图片并将历史图像添加为参考
-            uploadedImages = [];
-            
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const filename = `history-${timestamp}.png`;
-            
-            // 计算base64数据的大小（近似值）
-            const base64Size = Math.floor((imageData.length * 3) / 4);
-            
-            uploadedImages.push({
-                name: filename,
-                data: imageData,
-                prompt: prompt,
-                size: base64Size,
-                isFromHistory: true
-            });
-            
-            displayUploadedImages();
-            updateUploadStats();
-            
-            // 显示成功消息
-            showResult('已从历史记录加载图像和提示词', 'success');
-            
-            // 滚动到顶部
-            window.scrollTo(0, 0);
-        }
-
-        // 下载历史记录中的图像
-        function downloadHistoryImage(imageData, filename) {
-            downloadImage(imageData, filename);
-        }
-
-        // 切换历史记录显示/隐藏
-        function toggleHistory() {
-            const historyContent = document.getElementById('historyContent');
-            if (historyContent.style.display === 'none') {
-                historyContent.style.display = 'block';
-                updateHistoryDisplay();
-            } else {
-                historyContent.style.display = 'none';
-            }
-        }
-
-        function updateLoadingText(retryCount) {
-            const loadingText = document.getElementById('loadingText');
-            if (retryCount === 0) {
-                loadingText.textContent = '正在生成图像，请稍候...';
-            } else {
-                loadingText.textContent = `重试中... (${retryCount}/${MAX_RETRY_COUNT})`;
-            }
-        }
-
-        // 重置加载状态和按钮状态
-        function resetLoadingState() {
-            showLoading(false);
-            const button = document.querySelector('.button');
-            button.disabled = false;
-            currentRetryCount = 0;
-        }
-
-        async function generateImage() {
-            // 重置重试计数器
-            currentRetryCount = 0;
-            await generateImageWithRetry();
-        }
-
-        async function generateImageWithRetry() {
-            const apiKey = document.getElementById('apiKey').value.trim();
-            const prompt = document.getElementById('prompt').value.trim();
-            const baseUrl = document.getElementById('baseUrl').value.trim();
-
-            // 验证输入（只在第一次尝试时验证）
-            if (currentRetryCount === 0) {
-                if (!apiKey) {
-                    showResult('请输入API Key', 'error');
-                    return;
-                }
-
-                if (!prompt) {
-                    showResult('请输入图像描述', 'error');
-                    return;
-                }
-
-                // 保存配置
-                saveConfig();
-                
-                // 保存提示词到历史记录
-                savePromptToHistory(prompt);
-            }
-
-            // 显示加载状态
-            showLoading(true);
-            updateLoadingText(currentRetryCount);
-            const button = document.querySelector('.button');
-            button.disabled = true;
-
-            try {
-                // 构建Gemini API请求的payload
-                const parts = [
-                    { text: prompt }
-                ];
-
-                // 添加上传的图片到parts
-                uploadedImages.forEach(image => {
-                    // 从data URL中提取base64数据和mime类型
-                    const match = image.data.match(/^data:(image\/[^;]+);base64,(.+)$/);
-                    if (match) {
-                        const mimeType = match[1];
-                        const base64Data = match[2];
-                        parts.push({
-                            inlineData: {
-                                mimeType: mimeType,
-                                data: base64Data
-                            }
-                        });
-                    }
-                });
-
-                // 构建请求payload
-                const payload = {
-                    contents: [{
-                        parts: parts
-                    }]
-                };
-
-                console.log(`发送请求 (尝试 ${currentRetryCount + 1}):`, payload);
-
-                // 发送请求到Gemini API
-                const response = await fetch(baseUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-goog-api-key': apiKey
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    let errorMessage;
-                    try {
-                        const errorJson = JSON.parse(errorText);
-                        errorMessage = errorJson.error?.message || errorText;
-                    } catch {
-                        errorMessage = errorText;
-                    }
-                    throw new Error(`HTTP ${response.status}: ${errorMessage}`);
-                }
-
-                const data = await response.json();
-                console.log('API响应:', data);
-
-                // 处理Gemini API响应
-                if (!data.candidates || data.candidates.length === 0) {
-                    throw new Error('API返回了空的candidates数组');
-                }
-
-                let imageFound = false;
-                let resultHtml = '';
-                let generatedImageData = null;
-
-                // 遍历candidates
-                for (const candidate of data.candidates) {
-                    if (candidate.content && candidate.content.parts) {
-                        for (const part of candidate.content.parts) {
-                            // 检查是否有文本内容
-                            if (part.text) {
-                                resultHtml += `<p>${part.text}</p>`;
-                            }
-                            
-                            // 检查是否有图像数据
-                            if (part.inlineData && part.inlineData.mimeType && part.inlineData.data) {
-                                // 构建完整的data URL
-                                const imageData = `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
-                                generatedImageData = imageData;
-                                
-                                const imageId = Date.now() + Math.random();
-                                generatedImages.push({
-                                    id: imageId,
-                                    data: imageData,
-                                    prompt: prompt
-                                });
-                                
-                                // 保存到历史记录
-                                saveToHistory(imageData, prompt);
-                                
-                                resultHtml += `
-                                    <img src="${imageData}" alt="生成的图像" class="generated-image" onclick="downloadImage('${imageData}', 'generated-image-${imageId}.png')">
-                                    <div class="action-buttons">
-                                        <button type="button" class="button-small" onclick="downloadImage('${imageData}', 'generated-image-${imageId}.png')">
-                                            💾 下载图片
-                                        </button>
-                                        <button type="button" class="button-small button-add" onclick="addGeneratedToUpload('${imageData}', '${prompt.replace(/'/g, "\\'")}')">
-                                            ➕ 设为参考图片
-                                        </button>
-                                    </div>
-                                `;
-                                imageFound = true;
-                            }
-                        }
-                    }
-                }
-
-                // 如果没有找到图像且还有重试次数，进行重试
-                if (!imageFound && currentRetryCount < MAX_RETRY_COUNT) {
-                    currentRetryCount++;
-                    console.log(`未找到图像，准备第 ${currentRetryCount} 次重试...`);
-                    
-                    // 短暂延迟后重试
-                    setTimeout(() => {
-                        generateImageWithRetry();
-                    }, 1000);
-                    return;
-                }
-
-                // 显示结果
-                if (resultHtml || imageFound) {
-                    if (uploadedImages.length > 0) {
-                        resultHtml += `<p><small>使用了 ${uploadedImages.length} 张参考图片</small></p>`;
-                    }
-                    resultHtml += `<p><small>提示词: ${prompt}</small></p>`;
-                    if (currentRetryCount > 0) {
-                        resultHtml += `<p><small>经过 ${currentRetryCount + 1} 次尝试成功生成</small></p>`;
-                    }
-                    showResult(resultHtml, 'success');
-                } else {
-                    // 所有重试都失败了
-                    let errorMsg = `生成失败：经过 ${MAX_RETRY_COUNT + 1} 次尝试仍未获得图像。`;
-                    errorMsg += '<div class="retry-info">可能原因：<br>• 模型暂时不可用<br>• 提示词不符合模型要求<br>• API配额不足<br>建议稍后重试或修改提示词</div>';
-                    showResult(errorMsg, 'error');
-                }
-
-                // 重置加载状态
-                resetLoadingState();
-
-                // 显示使用情况信息
-                if (data.usageMetadata) {
-                    console.log('使用情况:', data.usageMetadata);
-                }
-
-            } catch (error) {
-                console.error(`生成图像时出错 (尝试 ${currentRetryCount + 1}):`, error);
-                
-                // 如果是网络错误、API错误或内容为空错误，且还有重试次数，进行重试
-                if (currentRetryCount < MAX_RETRY_COUNT && (
-                    error.message.includes('HTTP') || 
-                    error.message.includes('fetch') || 
-                    error.message.includes('network') || 
-                    error.message.includes('timeout') || 
-                    error.message.includes('API返回了空的candidates数组')
-                )) {
-                    currentRetryCount++;
-                    console.log(`API错误，准备第 ${currentRetryCount} 次重试...`);
-                    
-                    // 短暂延迟后重试
-                    setTimeout(() => {
-                        generateImageWithRetry();
-                    }, 2000);
-                    return;
-                } else {
-                    // 显示最终错误
-                    let errorMsg = `生成失败: ${error.message}`;
-                    if (currentRetryCount > 0) {
-                        errorMsg += `<div class="retry-info">已尝试 ${currentRetryCount + 1} 次</div>`;
-                    }
-                    showResult(errorMsg, 'error');
-                    
-                    // 重置加载状态
-                    resetLoadingState();
-                }
-            }
-        }
-
-        function showLoading(show) {
-            const loading = document.getElementById('loading');
-            if (show) {
-                loading.classList.add('active');
-            } else {
-                loading.classList.remove('active');
-            }
-        }
-
-        function showResult(content, type = '') {
-            const result = document.getElementById('result');
-            result.innerHTML = `<div class="result ${type}"><h3>${type === 'error' ? '错误' : type === 'success' ? '成功' : type === 'warning' ? '警告' : '结果'}</h3>${content}</div>`;
-        }
-
-        function showDownloadNotification() {
-            const notification = document.getElementById('downloadInfo');
-            notification.classList.add('show');
-            
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
-        }
-
-        function downloadImage(imageData, filename) {
-            try {
-                // 创建下载链接
-                const link = document.createElement('a');
-                link.href = imageData;
-                link.download = filename;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
-                // 显示下载通知
-                showDownloadNotification();
-                
-                // 在控制台记录下载事件
-                console.log(`图像已下载: ${filename}`);
-                
-            } catch (error) {
-                console.error('下载失败:', error);
-                showResult(`下载失败: ${error.message}`, 'error');
-            }
-        }
-
-        // 页面加载时的初始化
-        window.addEventListener('load', async function() {
-            loadConfig();
-            addConfigListeners();
-            initImageUpload();
-            updateUploadStats();
-            
-            try {
-                await initIndexedDB();
-                await updateHistoryDisplay();
-            } catch (error) {
-                console.error('初始化失败:', error);
-                const historyGrid = document.getElementById('historyGrid');
-                if (historyGrid) {
-                    historyGrid.innerHTML = `
-                        <div class="empty-history">
-                            历史记录功能初始化失败
-                        </div>
-                    `;
-                }
-            }
-        });
-    </script>
 </body>
 </html>
